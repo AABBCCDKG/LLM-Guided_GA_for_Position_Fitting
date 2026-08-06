@@ -10,7 +10,7 @@ include(CMakePackageConfigHelpers)
 
 function(smartga_enable_warnings target)
     if(MSVC)
-        target_compile_options(${target} PRIVATE /W4)
+        target_compile_options(${target} PRIVATE /W4 /EHsc)
     else()
         target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic)
     endif()
