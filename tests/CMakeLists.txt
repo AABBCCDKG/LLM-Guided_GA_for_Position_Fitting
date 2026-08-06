@@ -1,0 +1,9 @@
+add_executable(expression_function_test expression_function_test.cpp)
+target_link_libraries(expression_function_test PRIVATE SmartGA::core)
+smartga_enable_warnings(expression_function_test)
+add_test(NAME expression_function_test COMMAND expression_function_test)
+
+add_executable(genetic_algorithm_test genetic_algorithm_test.cpp)
+target_link_libraries(genetic_algorithm_test PRIVATE SmartGA::core)
+smartga_enable_warnings(genetic_algorithm_test)
+add_test(NAME genetic_algorithm_test COMMAND genetic_algorithm_test)

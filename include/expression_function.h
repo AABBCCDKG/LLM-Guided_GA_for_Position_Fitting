@@ -1,24 +1,21 @@
-#ifndef FUNCTION_H
-#define FUNCTION_H
+#ifndef SMARTGA_EXPRESSION_FUNCTION_H
+#define SMARTGA_EXPRESSION_FUNCTION_H
 
-#include <vector>
+#include <cstddef>
 #include <string>
-#include <cmath>
-#include <regex>
-#include <stdexcept>
-#include <sstream>
+#include <vector>
 
 class Function {
 public:
-    Function(const std::vector<std::string>& instructions, const std::string& expression);
+    explicit Function(std::vector<std::string> instructions);
 
     static Function createFromInstructions(const std::string& instruction_string);
 
-    std::vector<double> calculate(const std::vector<double>& x_values);
+    std::vector<double> calculate(const std::vector<double>& x_values) const;
 
     double evaluateSimilarity(const std::vector<double>& calculated_values, const std::vector<double>& desired_output);
 
-    void substituteInstruction(size_t index, const std::string& new_instruction);
+    void substituteInstruction(std::size_t index, const std::string& new_instruction);
 
     double getScore() const;
 
@@ -29,10 +26,10 @@ public:
 private:
     std::vector<std::string> instructions;
     std::string expression;
-    double score;
+    double score = 0.0;
 
-    std::string formatInstruction(const std::string& instruction);
+    static std::string formatInstruction(const std::string& instruction);
     void updateExpression();
 };
 
-#endif // FUNCTION_H
+#endif  // SMARTGA_EXPRESSION_FUNCTION_H

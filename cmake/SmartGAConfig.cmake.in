@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+set(SmartGA_WITH_OPENCV @SMARTGA_PACKAGE_WITH_OPENCV@)
+if(SmartGA_WITH_OPENCV)
+    find_dependency(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/SmartGATargets.cmake")
+
+check_required_components(SmartGA)

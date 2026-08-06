@@ -1,11 +1,10 @@
-#ifndef DETECTOBJECT_H
-#define DETECTOBJECT_H
+#ifndef SMARTGA_OBJECT_DETECTOR_H
+#define SMARTGA_OBJECT_DETECTOR_H
 
-#include <opencv2/opencv.hpp>
-#include <vector>
 #include <map>
 #include <string>
-#include <stdexcept>
+#include <utility>
+#include <vector>
 
 class DetectObject {
 public:
@@ -25,4 +24,4 @@ private:
 
 std::vector<std::string> getImagePaths(const std::string& folder_path);
 
-#endif // DETECTOBJECT_H
+#endif  // SMARTGA_OBJECT_DETECTOR_H

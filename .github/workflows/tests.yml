@@ -1,0 +1,88 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-cpp20:
+    name: Linux C++20
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Configure
+        run: >-
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_CXX_FLAGS=-Werror
+          -DSMARTGA_BUILD_TESTS=ON
+          -DSMARTGA_ENABLE_OPENCV=OFF
+
+      - name: Build
+        run: cmake --build build --parallel 2
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure --no-tests=error
+
+      - name: Install
+        run: cmake --install build --prefix "$PWD/install"
+
+      - name: Configure installed-package consumer
+        run: >-
+          cmake -S tests/consumer -B consumer-build
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_CXX_FLAGS=-Werror
+          -DCMAKE_PREFIX_PATH="$PWD/install"
+
+      - name: Build installed-package consumer
+        run: cmake --build consumer-build --parallel 2
+
+      - name: Run installed-package consumer
+        run: ./consumer-build/smartga_consumer
+
+  windows-msvc:
+    name: Windows MSVC
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Configure
+        shell: pwsh
+        run: >-
+          cmake -S . -B build -A x64
+          -DSMARTGA_BUILD_TESTS=ON
+          -DSMARTGA_ENABLE_OPENCV=OFF
+          "-DCMAKE_CXX_FLAGS=/WX"
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 2
+
+      - name: Test
+        run: ctest --test-dir build -C Release --output-on-failure --no-tests=error
+
+      - name: Install
+        shell: pwsh
+        run: cmake --install build --config Release --prefix "$PWD/install"
+
+      - name: Configure installed-package consumer
+        shell: pwsh
+        run: >-
+          cmake -S tests/consumer -B consumer-build -A x64
+          "-DCMAKE_PREFIX_PATH=$PWD/install"
+          "-DCMAKE_CXX_FLAGS=/WX"
+
+      - name: Build installed-package consumer
+        run: cmake --build consumer-build --config Release --parallel 2
+
+      - name: Run installed-package consumer
+        shell: pwsh
+        run: ./consumer-build/Release/smartga_consumer.exe
